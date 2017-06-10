@@ -17,7 +17,7 @@ import (
 )
 
 func spitIP(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(w, req.Header.Get("X-Real-IP"))
+	fmt.Fprintf(w, req.Header.Get("X-Forwarded-For"))
 }
 
 func main() {
