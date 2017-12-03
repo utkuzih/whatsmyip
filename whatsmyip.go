@@ -10,22 +10,36 @@
 
 package main
 
+import s "strings"
+import "strconv"
+
 import (
 	"fmt"
 	"log"
 	"net/http"
 )
 
-func spitIP(w http.ResponseWriter, req *http.Request) {
+func printIP(w http.ResponseWriter, req *http.Request) {
 	ip := req.Header.Get("X-Real-IP")
 	if len(ip) == 0 {
 		ip = req.Header.Get("X-Forwarded-For")
 	}
 	fmt.Fprintf(w, ip)
+
+	length := req.Header.Get("X-UP-Blob")
+	if len(length) > 0 {
+	    i, err := strconv.Atoi(length)
+        if err == nil {
+            fmt.Fprintf(w, " ")
+            if (i <= 10*1024*1024) {
+	            fmt.Fprintf(w, s.Repeat("a", i))
+	        }
+	    }
+	}
 }
 
 func main() {
-	http.HandleFunc("/", spitIP)
+	http.HandleFunc("/", printIP)
 	err := http.ListenAndServe("0.0.0.0:80", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
