@@ -26,7 +26,7 @@ func printIP(w http.ResponseWriter, req *http.Request) {
 	}
 	fmt.Fprintf(w, ip)
 
-	length := req.Header.Get("X-UP-Blob")
+	length := req.URL.Query().Get("length")
 	if len(length) > 0 {
 	    i, err := strconv.Atoi(length)
         if err == nil {
